@@ -1,0 +1,8 @@
+
+name: xCore
+main: com.kervand.core.CorePlugin
+
+version: 0.1
+depend:
+  - xAPI
+  - TAB
