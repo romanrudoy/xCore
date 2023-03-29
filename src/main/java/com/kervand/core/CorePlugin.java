@@ -27,6 +27,7 @@ public class CorePlugin extends JavaPlugin {
     private @Getter NewbieHandler newbieHandler;
 
     private @Getter IDatabase coreDatabase;
+    private @Getter CoreManager coreManager;
 
     @Override
     public void onEnable() {
@@ -74,6 +75,8 @@ public class CorePlugin extends JavaPlugin {
                 throw new RuntimeException(e);
             }
         }
+
+        this.coreManager = new CoreManager(this);
 
     }
 
