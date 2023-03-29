@@ -25,7 +25,7 @@ public class CoreManager {
         } else {
 
             user = new CoreUser(name);
-            plugin.getCoreDatabase().saveUserToDatabase(user);
+            plugin.getCoreDatabase().saveUser(user);
 
         }
 
@@ -37,7 +37,7 @@ public class CoreManager {
     public void saveUser(CoreUser user) {
 
         loadedUsers.put(user.getName(), user);
-        plugin.getCoreDatabase().saveUserToDatabase(user);
+        plugin.getCoreDatabase().saveUser(user);
 
     }
 

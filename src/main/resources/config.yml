@@ -3,6 +3,8 @@
 # /soundloop <игрок> <звук> <длительность_звука> <сколько_раз_его_играть> # xcore.admin
 # /stopsound <игрок> - Остановить все звуки игроку # xcore.admin
 
+# MYSQL / SQLITE
+use-database: SQLITE
 database:
   host: localhost
   port: 3306

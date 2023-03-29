@@ -1,10 +1,10 @@
-package com.kervand.core;
+package com.kervand.core.database;
 
 import com.kervand.core.objects.CoreUser;
 
 import java.sql.*;
 
-public class CoreDatabase {
+public class CoreMySQL implements IDatabase {
 
     private final String host;
     private final int port;
@@ -14,7 +14,7 @@ public class CoreDatabase {
 
     private Connection connection;
 
-    public CoreDatabase(String host, int port, String database, String userName, String password) {
+    public CoreMySQL(String host, int port, String database, String userName, String password) {
 
         this.host = host;
         this.port = port;
@@ -70,7 +70,7 @@ public class CoreDatabase {
 
     }
 
-    public void saveUserToDatabase(CoreUser user) {
+    public void saveUser(CoreUser user) {
 
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO users(name, ignoreList, lastRewardDate, lastRewardLevel, reportsConfirmed, playerLevel, playerXP) VALUES (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE " +
                 "playerLevel=" + user.getLevel() + ", playerXP=" + user.getXp() + ", ignoreList=" + user.getIgnoreList() + ", reportsConfirmed=" + user.getReportsConfirmed() + ", lastRewardDate=" + user.getLastDailyRewardClaimed() +

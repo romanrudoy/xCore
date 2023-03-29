@@ -2,6 +2,8 @@ package com.kervand.core.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -105,6 +107,14 @@ public class CoreUser {
 
     public void takeXP(double xp) {
         this.xp -= xp;
+    }
+
+    public boolean isPlayerOnline() {
+        return getPlayer() != null;
+    }
+
+    public Player getPlayer() {
+        return Bukkit.getPlayerExact(name);
     }
 
 }

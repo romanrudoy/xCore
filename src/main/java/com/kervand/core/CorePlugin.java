@@ -2,6 +2,9 @@ package com.kervand.core;
 
 import co.aikar.commands.PaperCommandManager;
 import com.babijon.commons.xAPI;
+import com.kervand.core.database.CoreMySQL;
+import com.kervand.core.database.CoreSQLite;
+import com.kervand.core.database.IDatabase;
 import com.kervand.core.modules.board.BoardModule;
 import com.kervand.core.modules.join.JoinListener;
 import com.kervand.core.modules.newbiefilter.NewbieHandler;
@@ -13,6 +16,8 @@ import com.kervand.core.modules.sound.commands.StopSoundCommand;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.SQLException;
+
 public class CorePlugin extends JavaPlugin {
 
     private static @Getter CorePlugin instance;
@@ -21,7 +26,7 @@ public class CorePlugin extends JavaPlugin {
     private @Getter NPCModule npcModule;
     private @Getter NewbieHandler newbieHandler;
 
-    private @Getter CoreDatabase coreDatabase;
+    private @Getter IDatabase coreDatabase;
 
     @Override
     public void onEnable() {
@@ -58,9 +63,17 @@ public class CorePlugin extends JavaPlugin {
         if (getConfig().getBoolean("modules.newbie"))
             newbieHandler = new NewbieHandler();
 
-        this.coreDatabase = new CoreDatabase(getConfig().getString("database.host"), getConfig().getInt("database.port"),
-                getConfig().getString("database.database"), getConfig().getString("database.user"),
-                getConfig().getString("database.password"));
+        if (getConfig().getString("use-database").equalsIgnoreCase("MYSQL")) {
+            this.coreDatabase = new CoreMySQL(getConfig().getString("database.host"), getConfig().getInt("database.port"),
+                    getConfig().getString("database.database"), getConfig().getString("database.user"),
+                    getConfig().getString("database.password"));
+        } else {
+            try {
+                this.coreDatabase = new CoreSQLite();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
     }
 
@@ -68,8 +81,6 @@ public class CorePlugin extends JavaPlugin {
     public void onDisable() {
 
         boardModule.stop();
-
-        coreDatabase.closeConnection();
 
     }
 
