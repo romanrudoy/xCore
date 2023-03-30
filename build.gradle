@@ -25,7 +25,6 @@ repositories {
 
     maven { url='https://repo.kryptonmc.org/releases' }
     maven { url='https://jitpack.io' }
-    maven { url='https://repo.aikar.co/content/groups/aikar/' }
 
 }
 
@@ -41,8 +40,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    compileOnly 'com.github.romanrudoy:xAPI:v1.0.1'
-    compileOnly 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
+    compileOnly 'com.github.romanrudoy:xAPI:v1.0.2'
 
     compileOnly 'me.neznamy:tab-api:3.2.4'
     compileOnly 'me.clip:placeholderapi:2.11.2'

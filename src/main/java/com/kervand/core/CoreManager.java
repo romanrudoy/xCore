@@ -19,14 +19,10 @@ public class CoreManager {
         if (loadedUsers.containsKey(name))
             return loadedUsers.get(name);
 
-        CoreUser user;
-        if (plugin.getCoreDatabase().isRegistered(name)) {
-            user = plugin.getCoreDatabase().loadUserFromDatabase(name);
-        } else {
-
+        CoreUser user = plugin.getCoreDatabase().loadUserFromDatabase(name);
+        if (user == null) {
             user = new CoreUser(name);
             plugin.getCoreDatabase().saveUser(user);
-
         }
 
         loadedUsers.put(name, user);

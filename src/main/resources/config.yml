@@ -1,4 +1,6 @@
 
+# Права на всю хуйню core.admin
+
 # Команды:
 # /soundloop <игрок> <звук> <длительность_звука> <сколько_раз_его_играть> # xcore.admin
 # /stopsound <игрок> - Остановить все звуки игроку # xcore.admin
@@ -22,6 +24,7 @@ messages:
   # Usage
   soundloop-usage: '&e⌚ &7₎∫ &e/soundloop <игрок> <звук> <длительность_звука> <сколько_раз_его_играть>'
   stopsound-usage: '&e⌚ &7₎∫ &e/stopsound <игрок>'
+  npc-usage: '&e⌚ &7₎∫ &e/npc setmainhand/setoffhand/sethelmet/reload'
 
 # Anti-Void System
 void-tp:

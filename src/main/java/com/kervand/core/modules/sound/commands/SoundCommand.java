@@ -1,7 +1,7 @@
 package com.kervand.core.modules.sound.commands;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
+import com.babijon.commons.command.CommandInfo;
+import com.babijon.commons.command.ICommand;
 import com.babijon.commons.utils.MessageUtil;
 import com.babijon.commons.utils.NumberUtils;
 import com.kervand.core.CorePlugin;
@@ -12,14 +12,19 @@ import org.bukkit.entity.Player;
 
 import java.util.OptionalInt;
 
-public class SoundCommand extends BaseCommand {
+@CommandInfo(name = "soundloop", aliases = {"sl", "sloop"})
+public class SoundCommand extends ICommand {
 
     private final CorePlugin plugin = CorePlugin.getInstance();
 
-    @CommandAlias("sound|soundloop|sl")
-    private void execute(CommandSender issuer, String[] args) {
+    public SoundCommand() {
+        super("soundloop");
+    }
 
-        if (!issuer.hasPermission("xcore.admin")) {
+    @Override
+    public void execute(CommandSender issuer, String[] args) {
+
+        if (!issuer.hasPermission("core.admin")) {
             issuer.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.no-permission")));
             return;
         }

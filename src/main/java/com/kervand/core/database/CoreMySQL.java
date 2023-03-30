@@ -62,7 +62,7 @@ public class CoreMySQL implements IDatabase {
     private void init() {
 
         try (PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users(name TEXT NOT NULL UNIQUE, ignoreList TEXT NOT NULL, " +
-                "lastRewardDate TEXT NOT NULL, lastRewardLevel TINYINT NOT NULL, reportsConfirmed SMALLINT NOT NULL, playerLevel TINYINT NOT NULL, playerXP DOUBLE NOT NULL)")) {
+                "lastRewardDate TEXT, lastRewardLevel TINYINT NOT NULL, reportsConfirmed SMALLINT NOT NULL, playerLevel TINYINT NOT NULL, playerXP DOUBLE NOT NULL)")) {
             statement.execute();
         } catch (Exception e) {
             e.printStackTrace();

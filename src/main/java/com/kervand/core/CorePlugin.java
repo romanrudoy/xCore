@@ -1,7 +1,5 @@
 package com.kervand.core;
 
-import co.aikar.commands.PaperCommandManager;
-import com.babijon.commons.xAPI;
 import com.kervand.core.database.CoreMySQL;
 import com.kervand.core.database.CoreSQLite;
 import com.kervand.core.database.IDatabase;
@@ -37,10 +35,8 @@ public class CorePlugin extends JavaPlugin {
         saveDefaultConfig();
         saveResource("npcs.yml", false);
 
-        PaperCommandManager commandManager = new PaperCommandManager(xAPI.getInstance());
-
-        commandManager.registerCommand(new SoundCommand());
-        commandManager.registerCommand(new StopSoundCommand());
+        new SoundCommand();
+        new StopSoundCommand();
 
         new CorePlaceholders().register();
 
@@ -53,7 +49,7 @@ public class CorePlugin extends JavaPlugin {
 
             npcModule = new NPCModule();
 
-            commandManager.registerCommand(new NPCCommand());
+            new NPCCommand();
             new NPCListener();
 
         }
@@ -84,6 +80,7 @@ public class CorePlugin extends JavaPlugin {
     public void onDisable() {
 
         boardModule.stop();
+        coreDatabase.closeConnection();
 
     }
 

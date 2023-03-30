@@ -1,57 +1,72 @@
 package com.kervand.core.modules.npc.commands;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.HelpCommand;
-import co.aikar.commands.annotation.Subcommand;
+import com.babijon.commons.command.CommandInfo;
+import com.babijon.commons.command.ICommand;
 import com.babijon.commons.utils.MessageUtil;
 import com.kervand.core.CorePlugin;
 import com.kervand.core.modules.npc.NPCModule;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-@CommandAlias("npcs|npc")
-public class NPCCommand extends BaseCommand {
+@CommandInfo(name = "npc", aliases = { "npcs" }, onlyPlayers = true)
+public class NPCCommand extends ICommand {
 
     private final CorePlugin plugin = CorePlugin.getInstance();
-    private final NPCModule module;
+    private final NPCModule npcModule;
 
     public NPCCommand() {
-        this.module = plugin.getNpcModule();
+        super("npc");
+        this.npcModule = plugin.getNpcModule();
     }
 
-    @HelpCommand
-    private void help(CommandSender sender) {
+    @Override
+    public void execute(Player player, String[] args) {
 
-    }
-
-    @Subcommand("sethelmet")
-    private void setHelmet(CommandSender sender, String[] args) {
-
-        if (!sender.hasPermission("xcore.admin")) {
-            sender.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.no-permission")));
-            return;
-        }
-
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cCommand only for players.");
+        if (!player.hasPermission("core.admin")) {
+            player.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.no-permission")));
             return;
         }
 
         if (args.length == 0) {
-            sender.sendMessage("§e/npc sethelmet <npc key>");
+            player.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.npc-usage")));
             return;
         }
 
-        String key = args[0];
-        if (!module.getNpcConfig().get().getKeys(false).contains(key)) {
-            sender.sendMessage("§cNPC " + key + " not found.");
+        String subCommand = args[0].toLowerCase();
+        switch (subCommand) {
+            case "reload":
+                reload(player, args);
+                break;
+            case "sethelmet":
+                setHelmet(player, args);
+                break;
+            case "setmainhand":
+                setMainHand(player, args);
+                break;
+            case "setoffhand":
+                setOffHand(player, args);
+                break;
+            default:
+                help(player, args);
+                break;
+        }
+
+    }
+
+    private void setHelmet(Player player, String[] args) {
+
+        if (args.length == 1) {
+            player.sendMessage("§e/npc sethelmet <npc key>");
             return;
         }
 
-        Player player = (Player) sender;
+        String key = args[1];
+        if (!npcModule.getNpcConfig().get().getKeys(false).contains(key)) {
+            player.sendMessage("§cNPC " + key + " not found.");
+            return;
+        }
+
         if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             player.sendMessage("§cYou must hold item in hand.");
             return;
@@ -59,38 +74,26 @@ public class NPCCommand extends BaseCommand {
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        module.getNpcConfig().get().set(key + ".helmet", item);
-        module.getNpcConfig().save();
+        npcModule.getNpcConfig().get().set(key + ".helmet", item);
+        npcModule.getNpcConfig().save();
 
-        module.reload();
+        npcModule.reload();
 
     }
 
-    @Subcommand("setoffhand")
-    private void setOffHand(CommandSender sender, String[] args) {
+    private void setMainHand(Player player, String[] args) {
 
-        if (!sender.hasPermission("xcore.admin")) {
-            sender.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.no-permission")));
+        if (args.length == 1) {
+            player.sendMessage("§e/npc setmainhand <npc key>");
             return;
         }
 
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cCommand only for players.");
+        String key = args[1];
+        if (!npcModule.getNpcConfig().get().getKeys(false).contains(key)) {
+            player.sendMessage("§cNPC " + key + " not found.");
             return;
         }
 
-        if (args.length == 0) {
-            sender.sendMessage("§e/npc sethelmet <npc key>");
-            return;
-        }
-
-        String key = args[0];
-        if (!module.getNpcConfig().get().getKeys(false).contains(key)) {
-            sender.sendMessage("§cNPC " + key + " not found.");
-            return;
-        }
-
-        Player player = (Player) sender;
         if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             player.sendMessage("§cYou must hold item in hand.");
             return;
@@ -98,38 +101,26 @@ public class NPCCommand extends BaseCommand {
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        module.getNpcConfig().get().set(key + ".off-hand", item);
-        module.getNpcConfig().save();
+        npcModule.getNpcConfig().get().set(key + ".main-hand", item);
+        npcModule.getNpcConfig().save();
 
-        module.reload();
+        npcModule.reload();
 
     }
 
-    @Subcommand("setmainhand")
-    private void setMainHand(CommandSender sender, String[] args) {
+    private void setOffHand(Player player, String[] args) {
 
-        if (!sender.hasPermission("xcore.admin")) {
-            sender.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.no-permission")));
+        if (args.length == 1) {
+            player.sendMessage("§e/npc setoffhand <npc key>");
             return;
         }
 
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cCommand only for players.");
+        String key = args[1];
+        if (!npcModule.getNpcConfig().get().getKeys(false).contains(key)) {
+            player.sendMessage("§cNPC " + key + " not found.");
             return;
         }
 
-        if (args.length == 0) {
-            sender.sendMessage("§e/npc sethelmet <npc key>");
-            return;
-        }
-
-        String key = args[0];
-        if (!module.getNpcConfig().get().getKeys(false).contains(key)) {
-            sender.sendMessage("§cNPC " + key + " not found.");
-            return;
-        }
-
-        Player player = (Player) sender;
         if (player.getInventory().getItemInMainHand() == null || player.getInventory().getItemInMainHand().getType() == Material.AIR) {
             player.sendMessage("§cYou must hold item in hand.");
             return;
@@ -137,24 +128,20 @@ public class NPCCommand extends BaseCommand {
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        module.getNpcConfig().get().set(key + ".main-hand", item);
-        module.getNpcConfig().save();
+        npcModule.getNpcConfig().get().set(key + ".off-hand", item);
+        npcModule.getNpcConfig().save();
 
-        module.reload();
+        npcModule.reload();
 
     }
 
-    @Subcommand("reload")
-    private void reload(CommandSender sender) {
+    private void help(Player player, String[] args) {
+        player.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.npc-usage")));
+    }
 
-        if (!sender.hasPermission("xcore.admin")) {
-            sender.sendMessage(MessageUtil.colorize(plugin.getConfig().getString("messages.no-permission")));
-            return;
-        }
-
+    private void reload(Player player, String[] args) {
         plugin.getNpcModule().reload();
-        sender.sendMessage("§aNPCs reloaded.");
-
+        player.sendMessage("§aNPCs reloaded.");
     }
 
 }

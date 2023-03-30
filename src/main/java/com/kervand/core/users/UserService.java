@@ -1,5 +1,6 @@
-package com.kervand.core;
+package com.kervand.core.users;
 
+import com.kervand.core.CorePlugin;
 import com.kervand.core.objects.CoreUser;
 import org.bukkit.scheduler.BukkitRunnable;
 

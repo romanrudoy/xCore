@@ -10,4 +10,6 @@ public interface IDatabase {
     CoreUser loadUserFromDatabase(String name);
     boolean isRegistered(String name);
 
+    void closeConnection();
+
 }
