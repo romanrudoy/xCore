@@ -8,21 +8,24 @@ public class CoreSQLite implements IDatabase {
 
     private final String url;
 
-    private Connection connection;
-
     public CoreSQLite() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
 
         url = "jdbc:sqlite:plugins/xCore/users.db";
         Class.forName("org.sqlite.JDBC").newInstance();
 
-        this.connection = getConnection();
         this.init();
     }
 
     private void init() {
 
+        Connection connection = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         try (PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users(name TEXT NOT NULL UNIQUE, ignoreList TEXT NOT NULL, " +
-                "lastRewardDate TEXT NOT NULL, lastRewardLevel TINYINT NOT NULL, reportsConfirmed SMALLINT NOT NULL, playerLevel TINYINT NOT NULL, playerXP DOUBLE NOT NULL)")) {
+                "lastRewardDate TEXT, lastRewardLevel TINYINT NOT NULL, reportsConfirmed SMALLINT NOT NULL, playerLevel TINYINT NOT NULL, playerXP DOUBLE NOT NULL)")) {
             statement.execute();
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,17 +38,17 @@ public class CoreSQLite implements IDatabase {
     }
 
     public void closeConnection() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     public void saveUser(CoreUser user) {
 
+        Connection connection = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         try (PreparedStatement statement = connection.prepareStatement("REPLACE INTO users(name, ignoreList, lastRewardDate, lastRewardLevel, reportsConfirmed, playerLevel, playerXP) VALUES (?,?,?,?,?,?,?)")) {
 
             statement.setString(1, user.getName());
@@ -58,6 +61,9 @@ public class CoreSQLite implements IDatabase {
 
             statement.execute();
 
+            statement.close();
+            connection.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -67,6 +73,12 @@ public class CoreSQLite implements IDatabase {
     public CoreUser loadUserFromDatabase(String user) {
 
         CoreUser coreUser = null;
+        Connection connection = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE name = ? LIMIT 1")) {
 
             statement.setString(1, user);
@@ -86,6 +98,7 @@ public class CoreSQLite implements IDatabase {
 
                 resultSet.close();
                 statement.close();
+                connection.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -102,6 +115,12 @@ public class CoreSQLite implements IDatabase {
 
     public boolean isRegistered(String user) {
 
+        Connection connection = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE name = ? LIMIT 1")) {
 
             statement.setString(1, user);
@@ -113,6 +132,7 @@ public class CoreSQLite implements IDatabase {
 
                 resultSet.close();
                 statement.close();
+                connection.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
