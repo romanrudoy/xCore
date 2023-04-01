@@ -98,6 +98,7 @@ public class CoreUser {
 
     public void addXP(double xp, double inLevel) {
 
+        this.xp += xp;
         while (xp >= inLevel) {
             level++;
             xp -= inLevel;

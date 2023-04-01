@@ -10,7 +10,8 @@ public class XpUtility {
     public void addXp(String userName, double xp) {
 
         CoreUser user = CorePlugin.getInstance().getCoreManager().getOrLoadUser(userName);
-        user.addXP(xp, getXpRequired(user.getLevel()));
+        user.addXP(xp, getXpRequired(user.getLevel() + 1));
+
         CorePlugin.getInstance().getCoreManager().saveUser(user);
 
     }
