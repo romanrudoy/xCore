@@ -24,7 +24,7 @@ public class CoreSQLite implements IDatabase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        try (PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users(name TEXT NOT NULL UNIQUE, ignoreList TEXT NOT NULL, " +
+        try (PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS users(name TEXT NOT NULL UNIQUE, ignoreList TEXT NOT NULL, suffix TEXT, " +
                 "lastRewardDate TEXT, lastRewardLevel TINYINT NOT NULL, reportsConfirmed SMALLINT NOT NULL, playerLevel TINYINT NOT NULL, playerXP DOUBLE NOT NULL)")) {
             statement.execute();
         } catch (Exception e) {
@@ -49,15 +49,16 @@ public class CoreSQLite implements IDatabase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        try (PreparedStatement statement = connection.prepareStatement("REPLACE INTO users(name, ignoreList, lastRewardDate, lastRewardLevel, reportsConfirmed, playerLevel, playerXP) VALUES (?,?,?,?,?,?,?)")) {
+        try (PreparedStatement statement = connection.prepareStatement("REPLACE INTO users(name, ignoreList, suffix, lastRewardDate, lastRewardLevel, reportsConfirmed, playerLevel, playerXP) VALUES (?,?,?,?,?,?,?,?)")) {
 
             statement.setString(1, user.getName());
             statement.setString(2, user.getIgnoreListAsString());
-            statement.setString(3, user.getLastDailyRewardClaimed());
-            statement.setInt(4, user.getLastDailyRewardLevel());
-            statement.setInt(5, user.getReportsConfirmed());
-            statement.setInt(6, user.getLevel());
-            statement.setDouble(7, user.getXp());
+            statement.setString(3, user.getSuffix());
+            statement.setString(4, user.getLastDailyRewardClaimed());
+            statement.setInt(5, user.getLastDailyRewardLevel());
+            statement.setInt(6, user.getReportsConfirmed());
+            statement.setInt(7, user.getLevel());
+            statement.setDouble(8, user.getXp());
 
             statement.execute();
 
@@ -88,6 +89,7 @@ public class CoreSQLite implements IDatabase {
                     coreUser = new CoreUser(
                             resultSet.getString("name"),
                             resultSet.getString("ignoreList"),
+                            resultSet.getString("suffix"),
                             resultSet.getInt("lastRewardLevel"),
                             resultSet.getString("lastRewardDate"),
                             resultSet.getInt("reportsConfirmed"),

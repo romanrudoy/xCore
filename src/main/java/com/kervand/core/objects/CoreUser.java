@@ -15,6 +15,7 @@ public class CoreUser {
     private final @Getter String name;
 
     private String ignoreList;
+    private @Getter @Setter String suffix;
 
     private @Getter @Setter int lastDailyRewardLevel;
     private @Getter @Setter @Nullable String lastDailyRewardClaimed;
@@ -41,10 +42,11 @@ public class CoreUser {
 
     }
 
-    public CoreUser(String name, String ignoreList, int lastDailyRewardLevel, @Nullable String lastDailyRewardClaimed, int reportsConfirmed, int level, double xp) {
+    public CoreUser(String name, String ignoreList, String suffix, int lastDailyRewardLevel, @Nullable String lastDailyRewardClaimed, int reportsConfirmed, int level, double xp) {
 
         this.name = name;
         this.ignoreList = ignoreList;
+        this.suffix = suffix;
 
         this.lastDailyRewardLevel = lastDailyRewardLevel;
         this.lastDailyRewardClaimed = lastDailyRewardClaimed;
